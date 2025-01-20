@@ -8,7 +8,7 @@ Use
         working-directory: .
         password: ${{secrets.GITHUB_TOKEN}}
         image: ubuntu # The basename of image
-        registry: # target container registry. Default to ghcr.io
+        registry: ghcr.io # target container registry. Default to ghcr.io
 
 
 ```
