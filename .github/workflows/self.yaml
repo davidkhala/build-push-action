@@ -1,10 +1,25 @@
 name: self reference
 on: push
+permissions:
+    contents: read
+    packages: write
+env:
+    image: ubuntu
 jobs:
     use:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@main
         - uses: ./
-        
-    
+          with: 
+            working-directory: .
+            password: ${{secrets.GITHUB_TOKEN}}
+            image: ${{env.image}}
+        - uses: smartsquaregmbh/delete-old-packages@main
+          with:
+            user: ${{ github.repository_owner }}
+            type: container
+            names: ${{env.image}}
+            keep: 0
+
+

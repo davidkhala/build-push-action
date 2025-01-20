@@ -17,7 +17,7 @@ inputs:
     required: true
   image:
     description: 'basename of container image'
-    required: false
+    required: true
 runs:
   using: "composite"
   steps:
