@@ -12,18 +12,20 @@ inputs:
   working-directory:
     description: 'dirname of working directory'
     required: true
+  password:
+    description: 'docker login credential'
+    required: true
   image:
     description: 'basename of container image'
     required: false
 runs:
   using: "composite"
   steps:
-  - uses: actions/checkout@master
   - uses: docker/login-action@master
     with:
       registry: ${{ inputs.registry }}
       username: ${{ github.actor }}
-      password: ${{ secrets.GITHUB_TOKEN }}
+      password: ${{ inputs.password }}
 
   - uses: docker/metadata-action@master
     id: meta
