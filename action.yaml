@@ -1,0 +1,21 @@
+name: "davidkhala/new-action"
+description: 'new action description'
+
+branding:
+  icon: 'package'
+  color: 'purple'
+inputs:
+  tests:
+    description: 'Test Sources Root: working-directory of your tests'
+    required: false
+    default: tests
+  working-directory:
+    description: 'action run path'
+    required: true
+runs:
+  using: "composite"
+  steps:
+  - if: ${{ inputs.tests != '' }}
+    run: echo tests
+    working-directory: ${{inputs.working-directory}}
+    shell: bash
