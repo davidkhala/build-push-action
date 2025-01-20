@@ -1,21 +1,38 @@
-name: "davidkhala/new-action"
-description: 'new action description'
+name: "davidkhala/build-push-action"
+description: 'Release image from dockerfile to container registry'
 
 branding:
   icon: 'package'
-  color: 'purple'
+  color: 'blue'
 inputs:
-  tests:
-    description: 'Test Sources Root: working-directory of your tests'
+  registry:
+    description: 'container registry'
     required: false
-    default: tests
+    default: ghcr.io
   working-directory:
-    description: 'action run path'
+    description: 'dirname of working directory'
     required: true
+  image:
+    description: 'basename of container image'
+    required: false
 runs:
   using: "composite"
   steps:
-  - if: ${{ inputs.tests != '' }}
-    run: echo tests
-    working-directory: ${{inputs.working-directory}}
-    shell: bash
+  - uses: actions/checkout@master
+  - uses: docker/login-action@master
+    with:
+      registry: ${{ inputs.registry }}
+      username: ${{ github.actor }}
+      password: ${{ secrets.GITHUB_TOKEN }}
+
+  - uses: docker/metadata-action@master
+    id: meta
+    with:
+      images: ${{ inputs.registry }}/${{ github.repository_owner }}/${{ inputs.image }}
+
+  - uses: docker/build-push-action@master
+    with:
+      context: ${{ inputs.working-directory }}
+      push: true
+      tags: ${{ steps.meta.outputs.tags }}
+      labels: ${{ steps.meta.outputs.labels }}
